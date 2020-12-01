@@ -1,0 +1,5 @@
+body {
+ background-image: url("images/draft.png");
+ background-position: center; /* Center the image */
+ background-size: contain;
+}

@@ -1,0 +1,85 @@
+:doctype: article
+:encoding: utf-8
+:lang: en
+
+[[CompileCommands]]
+// asciidoctor -a data-uri defsServerOntologies.adoc
+// golo.css
+// asciidoctor -a stylesheet=css/golo.css -a data-uri defsServerOntologies.adoc
+
+
+= Publishing Ontologies via the OGC Definitions Server
+
+== Overview
+
+This document describes the issues and procedures around publishing information about ontologies published according to the  http://www.opengis.net/doc/pol-nts/ont/1.0[Name type specification – ontology
+resources] policy (OGC 12-081), such as GeoSPARQL.
+
+Note: the OGC definitions server supports publication of individual definitions and resources for OWL-encoded ApplicationSchema with a namespace that ends in "/".
+This is described in defsServerAppSchema.html[Publishing Application Schema with the OGC Definitions Server]. This is the preferred approach for publishing data exchange models that define schemas for specific Features and Properties.
+
+Specifically this document addresses the underlying challenges created by the practice of defining a namespace ending in a "#" (fragment identifier) and the implicit architectural concern that individual definitions
+can only be accessed as fragments of a whole document (on the Web servers do not see the fragment identifier after the # character).
+
+The other major concern addressed by this document is the complexity of description of ontology resources where complex formal structures may be used to express relatively simple constraints, and some form of reasoning may be required to fully entail all the relevant information.
+
+In summary, this document details how ontologies designed for use in ontology editing environments with specific import and entailment expectations can be made available for more general usage in a Web context, such as APIS base on XML and JSON data encodings.
+
+The document describes how such ontologies may be supported by a general purpose Definition Service supporting a Linked Data model for individual element definitions.
+
+== Use Cases
+
+=== Publishing an existing ontology and related resources
+
+==== PreConditions
+
+An existing ontology conformant to OGC 12-081
+
+such as: value
+
+http://www.opengis.net/ont/geosparql#SpatialObject
+
+which resolves to canonical schema location for an RDF/XML encoding
+
+(in this case http://schemas.opengis.net/geosparql/1.0/geosparql_vocab_all.rdf[http://schemas.opengis.net/geosparql/1.0/geosparql_vocab_all.rdf])
+
+==== PostConditions
+1. The canonical schema location remains unchanged in case clients have bookmarked or hard coded its location (in spite of this being an anti-pattern)
+2. Clients accessing the original URI and explicitly asking for media type application/rdf+xml continue to access the original location
+3. Other isomorphic encodings (TTL, JSON-LD) can be accessed using content-negotiation using the appropriate media type
+4. HTML documentation for the entire ontology can be accessed from the original URI using media_type text/HTML. This document will support fragment identifies as anchors.
+5. A Linked Data HTML based UI is available that is able to detect #fragment identifiers and deliver fragment-specific definition views, and accessible under a SKOS data model using https://www.w3.org/TR/dx-prof-conneg/[ConnegP] (content-negotiation-by-profile)
+6. A JSON-LD context document for the ontology will be generated and accessible via ConnegP (using profile token "jsoncontext")
+7. A description of the ontology and its available resources will be generated using the PROF and DCAT vocabularies
+8. Generated artefacts will be available under the NamingAuthority github repository https://github.com/opengeospatial/NamingAuthority/tree/master/definitions/ont/[https://github.com/opengeospatial/NamingAuthority/tree/master/definitions/ont/]
+9. The ontology and its contained definitions will be visible as resources under Definition Server index, browse and search mechanisms.
+
+==== Description
+The Definitions Server Content Management System will support registration of an ontology URI and perform automated generation of the artefacts necessary to support the target state.
+
+An initial command-line procedure will be tested for the components of this automation. Relevant SWGs should review these resources and instruct OGC-NA to publish to the live Definitions Server when ready.
+
+== Publishing Process Requirements
+
+This process consists of:
+
+1. lodge downloadable artefacts in a the appropriate location
+2. perform artefact generation and publication - this will either use staging areas or flag artefacts with appropriate status.
+
+== More detailed process
+
+== Related context
+
+A key perspective of an ontology are the ways it is used, which is not known within the ontology source itself.
+
+The proposed solution is to provide a series of well-known profiles for metadata about the ontology accessible via https://www.w3.org/TR/dx-prof-conneg/[ConnegP]
+
+
+== Downloading
+
+Ontologies will support traditional download options for the whole ontology based on standard HTTP content negotiation.
+
+A https://www.w3.org/TR/dx-prof-conneg/[ConnegP] "alternates" profile view will provide a list of all available download options, with formats per profile.
+
+
+<link to example>
